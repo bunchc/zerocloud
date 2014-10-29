@@ -5,6 +5,10 @@ SWAUTH_SA_KEY=swauthkey
 
 sudo apt-get update
 sudo apt-get install python-software-properties --yes --force-yes
+# Install things needed to install things
+sudo apt-get install git wget curl vim emacs23 python-pip python-dev build-essential apt-transport-https -y
+sudo apt-get install python-software-properties --yes --force-yes
+
 # Add PPA for ZeroVM packages
 sudo add-apt-repository ppa:zerovm-ci/zerovm-latest -y
 # Add repo for new node packages
@@ -16,7 +20,7 @@ sudo apt-get update
 sudo apt-get install git python-pip zerovm --yes --force-yes
 sudo pip install python-swiftclient==2.2.0
 sudo pip install python-keystoneclient
-
+sudo pip install zpm
 
 ###
 # Swauth: Auth middleware for Swift
@@ -28,8 +32,9 @@ sudo python setup.py install
 ###
 # ZeroCloud: ZeroVM middleware for Swift
 # Install is from the code on the host, mapped to /zerocloud
-cd /zerocloud-root
-sudo python setup.py develop
+git clone https://github.com/zerovm/zerocloud.git # to somewhere
+cd zerocloud/
+sudo python setup.py install  # maybe need sudo?
 
 ###
 # Python system image for ZeroCloud/ZeroVM
@@ -63,6 +68,20 @@ enable_service mysql s-proxy s-object s-container s-account
 # The previous commit works:
 SWIFT_BRANCH=ca915156fb2ce4fe4356f54fb2cee7bd01185af5
 KEYSTONE_BRANCH=2fc25ff9bb2480d04acae60c24079324d4abe3b0
+EOF
+
+mkdir -p $HOME/scripts
+cat > $HOME/scripts/reset.sh <<EOF
+#!/usr/bin/env bash
+
+mkdir -p /opt/stack/data/swift/drives/sdb1/1
+
+SWAUTH_SA_KEY=swauthkey
+swauth-prep -K $SWAUTH_SA_KEY
+swauth-add-user -A http://127.0.0.1:8080/auth/ -K $SWAUTH_SA_KEY \
+    --admin adminacct admin adminpass
+swauth-add-user -A http://127.0.0.1:8080/auth/ -K $SWAUTH_SA_KEY \
+   demoacct demo demopass
 EOF
 
 # Post-config hook for configuring zerocloud (and swauth) middleware
@@ -108,6 +127,16 @@ cd app
 source /vagrant/adminrc
 swift post -r '.r:*' swift-browser
 swift upload swift-browser .
+
+# Prestage all the things
+wget http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js -O ~/jquery.min.js
+wget http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.min.js -O ~/codemirror.min.js
+wget http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/mode/python/python.min.js -O ~/python.min.js
+wget http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.min.css -O ~/codemirror.min.css
+cd ~/
+swift post javascript-things
+swift upload javascript-things *.js
+swift upload javascript-things *.css
 
 STORAGE_URL=$(swift stat -v | grep StorageURL | cut -d ' ' -f 6)
 echo "Swift Browser installed at:"
