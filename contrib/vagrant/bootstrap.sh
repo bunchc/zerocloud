@@ -141,6 +141,15 @@ swift upload javascript-things *.css
 mkdir -p $HOME/solutions
 cp /vagrant/solutions/* $HOME/solutions
 
+# Set our login message
+MY_IP=$(ifconfig eth0 | awk '/inet addr/ {split ($2,A,":"); print A[2]}')
+sudo cat > /etc/issue <<EOF
+To login:
+
+ssh vagrant@${MY_IP}
+password: vagrant
+EOF
+
 STORAGE_URL=$(swift stat -v | grep StorageURL | cut -d ' ' -f 6)
 echo "Swift Browser installed at:"
 echo "  $STORAGE_URL/swift-browser/index.html"
