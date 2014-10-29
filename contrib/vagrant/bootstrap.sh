@@ -129,26 +129,17 @@ swift post -r '.r:*' swift-browser
 swift upload swift-browser .
 
 # Prestage all the things
-wget http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js -O ~/jquery.min.js
-wget http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.min.js -O ~/codemirror.min.js
-wget http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/mode/python/python.min.js -O ~/python.min.js
-wget http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.min.css -O ~/codemirror.min.css
+wget --quiet http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js -O ~/jquery.min.js
+wget --quiet http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.min.js -O ~/codemirror.min.js
+wget --quiet http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/mode/python/python.min.js -O ~/python.min.js
+wget --quiet http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.min.css -O ~/codemirror.min.css
 cd ~/
-swift post javascript-things
+swift post r '.r:*' javascript-things
 swift upload javascript-things *.js
 swift upload javascript-things *.css
 
 mkdir -p $HOME/solutions
 cp /vagrant/solutions/* $HOME/solutions
-
-# Set our login message
-MY_IP=$(ifconfig eth0 | awk '/inet addr/ {split ($2,A,":"); print A[2]}')
-sudo cat > /etc/issue <<EOF
-To login:
-
-ssh vagrant@${MY_IP}
-password: vagrant
-EOF
 
 STORAGE_URL=$(swift stat -v | grep StorageURL | cut -d ' ' -f 6)
 echo "Swift Browser installed at:"
