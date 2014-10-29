@@ -69,11 +69,15 @@ if __name__ == '__main__':
         'object_query',
         'object-server',
         extras={
-            'zerovm_sysimage_devices': 'python2.7 /usr/share/zerovm/python.tar'
+            'zerovm_sysimage_devices': 'python2.7 /usr/share/zerovm/python.tar',
+            'zerovm_maxnexemem': '134217728',
+            'zerovm_timeout': '60',
         }
     )
     # Set verbose logging on the object server
     cp.set('DEFAULT', 'log_level', 'DEBUG')
+    # Increase default number of workers:
+    cp.set('DEFAULT', 'workers', '32')
     with open(obj_server, 'w') as fp:
         cp.write(fp)
 
@@ -90,6 +94,7 @@ if __name__ == '__main__':
             'zerovm_sysimage_devices': ('python2.7 '
                                         '/usr/share/zerovm/python.tar'),
             'set log_name': 'zerocloud-proxy-query',
+            'zerovm_timeout': '60',
         }
     )
     # proxy server job chaining middleware
