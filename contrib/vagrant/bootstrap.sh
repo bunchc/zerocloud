@@ -138,6 +138,9 @@ swift post javascript-things
 swift upload javascript-things *.js
 swift upload javascript-things *.css
 
+mkdir -p $HOME/solutions
+cp /vagrant/solutions/* $HOME/solutions
+
 STORAGE_URL=$(swift stat -v | grep StorageURL | cut -d ' ' -f 6)
 echo "Swift Browser installed at:"
 echo "  $STORAGE_URL/swift-browser/index.html"
