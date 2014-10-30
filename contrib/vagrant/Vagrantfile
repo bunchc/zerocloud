@@ -14,6 +14,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
   config.vm.provision "shell", privileged: false, path: "bootstrap.sh"
 
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :box
+    config.cache.enable :apt
+    config.cache.synced_folder_opts = {
+      type: :nfs,
+      mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
+    }
+  else
+    puts "[-] WARN: This would be much faster if you ran vagrant plugin install vagrant-cachier first"
+  end
+
   config.vm.provider "virtualbox" do |v|
     v.memory = 1024
     v.cpus = 2
@@ -21,7 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Port forwarding
   # Swift:
-  config.vm.network "forwarded_port", guest: 8080, host: 8080
+  #config.vm.network "forwarded_port", guest: 8080, host: 8080
 
   # Map the local git clone folder into the vm:
 #  config.vm.synced_folder "../..", "/zerocloud-root"
