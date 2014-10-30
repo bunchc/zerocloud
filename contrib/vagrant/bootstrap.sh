@@ -138,8 +138,15 @@ swift post r '.r:*' javascript-things
 swift upload javascript-things *.js
 swift upload javascript-things *.css
 
+# Move some things into place & Clean up
 mkdir -p $HOME/solutions
 cp /vagrant/solutions/* $HOME/solutions
+cp /vagrant/*rc $HOME/solutions
+
+sudo apt-get clean
+sudo rm -rf /tmp/*
+sudo rm -f /var/log/wtmp /var/log/btmp
+histroy -c
 
 STORAGE_URL=$(swift stat -v | grep StorageURL | cut -d ' ' -f 6)
 echo "Swift Browser installed at:"
