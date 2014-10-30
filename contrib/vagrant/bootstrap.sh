@@ -134,7 +134,7 @@ wget --quiet http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.m
 wget --quiet http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/mode/python/python.min.js -O ~/python.min.js
 wget --quiet http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.min.css -O ~/codemirror.min.css
 cd ~/
-swift post r '.r:*' javascript-things
+swift post -r '.r:*' javascript-things
 swift upload javascript-things *.js
 swift upload javascript-things *.css
 
@@ -153,3 +153,5 @@ echo "Swift Browser installed at:"
 echo "  $STORAGE_URL/swift-browser/index.html"
 echo "User: $ST_USER"
 echo "Key: $ST_KEY"
+
+sudo shutdown -h
