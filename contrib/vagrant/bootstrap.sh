@@ -154,4 +154,4 @@ echo "  $STORAGE_URL/swift-browser/index.html"
 echo "User: $ST_USER"
 echo "Key: $ST_KEY"
 
-sudo shutdown -h
+sudo shutdown -h now
