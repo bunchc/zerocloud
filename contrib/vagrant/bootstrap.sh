@@ -143,15 +143,23 @@ mkdir -p $HOME/solutions
 cp /vagrant/solutions/* $HOME/solutions
 cp /vagrant/*rc $HOME/solutions
 
+# Reset Script into init
+sudo cat > /etc/init/fixdevstack.sh <<EOF
+#!/usr/bin/env bash                                                
+
+mkdir -p /opt/stack/data/swift/drives/sdb1/1  # This is the missing folder.
+
+SWAUTH_SA_KEY=swauthkey
+swauth-prep -K $SWAUTH_SA_KEY
+swauth-add-user -A http://127.0.0.1:8080/auth/ -K $SWAUTH_SA_KEY \
+    --admin adminacct admin adminpass
+swauth-add-user -A http://127.0.0.1:8080/auth/ -K $SWAUTH_SA_KEY \
+   demoacct demo demopass
+EOF
+
 sudo apt-get clean
 sudo rm -rf /tmp/*
 sudo rm -f /var/log/wtmp /var/log/btmp
 histroy -c
 
-STORAGE_URL=$(swift stat -v | grep StorageURL | cut -d ' ' -f 6)
-echo "Swift Browser installed at:"
-echo "  $STORAGE_URL/swift-browser/index.html"
-echo "User: $ST_USER"
-echo "Key: $ST_KEY"
-
-sudo shutdown -h now
+#sudo shutdown -h now
