@@ -166,10 +166,14 @@ swift post -r '.r:*' javascript-things
 swift upload javascript-things *.js
 swift upload javascript-things *.css
 EOF
+chmod +x ~/setuplab.sh
 
-sudo apt-get clean
-sudo rm -rf /tmp/*
-sudo rm -f /var/log/wtmp /var/log/btmp
+# Cleanup script
+cat > ~/cleanup.sh <<EOF
+apt-get clean
+rm -rf /tmp/*
+rm -f /var/log/wtmp /var/log/btmp
 histroy -c
-
-#sudo shutdown -h now
+sudo shutdown -h now
+EOF
+chmod +x ~/cleanup.sh
