@@ -143,8 +143,7 @@ mkdir -p $HOME/solutions
 cp /vagrant/solutions/* $HOME/solutions
 cp /vagrant/*rc $HOME/solutions
 
-# Reset Script into init
-sudo cat > /etc/init/fixdevstack.sh <<EOF
+cat > $HOME/setuplab.sh <<EOF
 #!/usr/bin/env bash                                                
 
 mkdir -p /opt/stack/data/swift/drives/sdb1/1  # This is the missing folder.
@@ -155,6 +154,17 @@ swauth-add-user -A http://127.0.0.1:8080/auth/ -K $SWAUTH_SA_KEY \
     --admin adminacct admin adminpass
 swauth-add-user -A http://127.0.0.1:8080/auth/ -K $SWAUTH_SA_KEY \
    demoacct demo demopass
+
+cd $HOME/swift-browser
+cd app
+source /home/vagrant/solutions/adminrc
+swift post -r '.r:*' swift-browser
+swift upload swift-browser .
+
+cd ~/
+swift post -r '.r:*' javascript-things
+swift upload javascript-things *.js
+swift upload javascript-things *.css
 EOF
 
 sudo apt-get clean
