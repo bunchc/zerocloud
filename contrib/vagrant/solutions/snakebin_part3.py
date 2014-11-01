@@ -194,9 +194,6 @@ def get():
         else:
             return http_resp(404, 'Not Found')
 
-    document_name, execute = re.match('.*/snakebin-api/?(\w+)?(/execute)?',
-                                      path_info).groups()
-
     if document_name is None:
         # Get empty form page:
         with open('index.html') as fp:
