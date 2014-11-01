@@ -9,6 +9,7 @@ import sqlite3
 import string
 import StringIO
 import sys
+import urllib
 import urlparse
 
 
